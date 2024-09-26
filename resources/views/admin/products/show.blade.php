@@ -13,6 +13,13 @@
                 <img src="{{Storage::url($product->image)}}" style="max-width: 100%; max-height: 100%;" alt="">
             </div>
         </li>
-        <li>Trạng thái: {{$product->is_featured}}</li>
+        <li>Danh mục :  {{$product->category->name}}</li>
+        <li>
+            Trạng thái:
+            <span class="badge {{$product->is_active ? 'bg-success' : 'bg-danger'}}">
+                {{$product->is_active ? 'Hoạt động' : 'Không hoạt động'}}
+            </span>
+        </li>        
+       
     </ul>
 @endsection
