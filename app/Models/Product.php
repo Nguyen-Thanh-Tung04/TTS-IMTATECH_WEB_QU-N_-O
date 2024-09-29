@@ -36,4 +36,7 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function scopeSearch($query,$term) {
+        return $query->where('name','like','%' . $term . '%');
+    }
 }

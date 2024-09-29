@@ -256,28 +256,7 @@
 
 
 
-
-
-
-<!-- Global Vendor, plugins JS -->
-
-<!-- Vendor JS -->
-<!-- <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/vendor/jquery-migrate-3.3.2.min.js"></script>
-    <script src="assets/js/vendor/modernizr-3.11.2.min.js"></script>  -->
-
-<!--Plugins JS-->
-<!-- <script src="assets/js/plugins/swiper-bundle.min.js"></script>
-    <script src="assets/js/plugins/jquery-ui.min.js"></script>
-    <script src="assets/js/plugins/jquery.nice-select.min.js"></script>
-    <script src="assets/js/plugins/countdown.js"></script>
-    <script src="assets/js/plugins/scrollup.js"></script>
-    <script src="assets/js/plugins/jquery.waypoints.js"></script>
-    <script src="assets/js/plugins/jquery.lineProgressbar.js"></script>
-    <script src="assets/js/plugins/jquery.zoom.min.js"></script>
-    <script src="assets/js/plugins/venobox.min.js"></script>
-    <script src="assets/js/plugins/ajax-mail.js"></script> -->
+ <script src="{{asset('theme/client/assets/js/plugins/ajax-mail.js')}}"></script> -->
 
 <!-- Use the minified version files listed below for better performance and remove the files listed above -->
 <script src="{{asset('theme/client/assets/js/jquery.min.js')}}"></script>
@@ -288,149 +267,136 @@
 
 <!-- Main Js -->
 <script src="{{asset('theme/client/assets/js/main.js')}}"></script>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    function validateInput(input) {
-        var inputValue = input.value;
+    let totalProduct = document.getElementById('totalProduct');
+  
+    function setSelectedColor(select) {
+    var selectedColor = select.value;
+    document.getElementById('selectedColor').value = selectedColor;
+    }
 
-        // Kiểm tra nếu giá trị nhập là số từ 0 đến 9 hoặc là kiểu chữ
-        if (inputValue === "" || inputValue === "0" || isNaN(inputValue)) {
-            input.value = "1"; // Đặt giá trị mặc định là 1
+    function setSelectedSize(select) {
+    var selectedSize = select.value;
+    document.getElementById('selectedSize').value = selectedSize;
+    }
+    
+    function addToCart(event, productId, productName, productPrice, productImage,color,size) {
+      event.preventDefault(); // Prevent default form submission behavior
+      var color = document.getElementById('selectedColor').value ||'Đen';
+      var size = document.getElementById('selectedSize').value || 'M';
+
+      $.ajax({
+        type: 'POST',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: '{{ route("addToCart") }}',
+        data: {
+          id: productId,
+          name: productName,
+          price: productPrice,
+          img: productImage,
+          color: color,
+          size: size
+        },
+        success: function (response) {
+          totalProduct.innerText = response.cartItemCount;
+          $('.header-action-num').text(response.cartItemCount);
+                  Swal.fire({
+                            title: 'Thông báo',
+                            text: 'Đã thêm vào giỏ hàng',
+                            icon: 'success',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            showCloseButton: true,
+                        });        },
+        error: function (error) {
+          console.log(error);
         }
+      });
     }
-
-    function showConfirmationDialog(href, event) {
-        event.preventDefault(); // Ngăn chặn điều hướng mặc định của thẻ a
-
-        Swal.fire({
-            title: 'Xác nhận',
-            text: 'Bạn có chắc chắn muốn xóa?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Có',
-            cancelButtonText: 'Không'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = href;
-            }
-        });
-    }
-
-    function showConfirmCancle(href, event) {
-        event.preventDefault(); // Ngăn chặn điều hướng mặc định của thẻ a
-
-        Swal.fire({
-            title: 'Xác nhận',
-            text: 'Bạn có chắc chắn muốn hủy đơn không?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Có',
-            cancelButtonText: 'Không'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = href;
-            }
-        });
-    }
-
     $(document).ready(function() {
-        $('#addToCartButton').click(function(event) {
-            event.preventDefault();
-            $.ajax({
-                url: './model/addtocart.php',
-                type: 'POST',
-                data: $('#AddToCartForm').serialize(),
-                success: function(response) {
-                    if (response.trim() == 'error') {
-                        window.location.href = 'index.php?act=login';
-
-                    } else {
-                        $('.header-action-num').text(response);
-                        Swal.fire({
-                            title: 'Thông báo',
-                            text: 'Đã thêm vào giỏ hàng',
-                            icon: 'success',
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            showCloseButton: true,
-                        });
-                    }
-
-                }
-            });
-        });
-
-        $('.addToCartButtonItem').click(function(event) {
-            event.preventDefault();
-            const form = $(this).closest('.AddToCartFormItem');
-            $.ajax({
-                url: './model/addtocart.php',
-                type: 'POST',
-                data: form.serialize(),
-                success: function(response) {
-                    if (response.trim() == 'error') {
-                        window.location.href = 'index.php?act=login';
-
-                    } else {
-                        $('.header-action-num').text(response);
-                        Swal.fire({
-                            title: 'Thông báo',
-                            text: 'Đã thêm vào giỏ hàng',
-                            icon: 'success',
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            showCloseButton: true,
-                        });
-                    }
-                }
-            });
-        });
-
-
-        $('.dec').on('click', function() {
-            changeQuantity($(this));
-        })
-
-        $('.inc').on('click', function() {
-            changeQuantity($(this));
-        })
-
-        $('.quantity-change').on('input', function() {
-            changeQuantity($(this));
-        })
-
-        const changeQuantity = function(element) {
-            const row = element.closest('tr');
-            const newValue = row.find('.quantity-change').val();
-
-            const priceText = row.find('.amount').text();
-            const price = parseFloat(priceText.replace('.', ''));
-            const subtotal = price * newValue;
-
-            const productId = row.find('input[type="hidden"]').val();
-            const color = row.find('.color').text();
-            const size = row.find('.size').text();
-
-            $.ajax({
-                url: './model/updatequantitycart.php',
-                type: 'POST',
-                data: {
-                    id: productId,
-                    color: color,
-                    size: size,
-                    quantity: newValue,
-                    total: subtotal,
-                },
-                success: function(response) {}
-            });
-            row.find('.product-subtotal').text(subtotal.toLocaleString('vi-VN'));
-        }
+    $('.dec').on('click', function() {
+        changeQuantity($(this));
     });
-</script>
+
+    $('.inc').on('click', function() {
+        changeQuantity($(this));
+    });
+
+    $('.quantity-change').on('input', function() {
+        changeQuantity($(this));
+    });
+
+    const changeQuantity = function(element) {
+        const row = element.closest('tr');
+        const newValue = row.find('.quantity-change').val();
+        const productId = row.find('.quantity-change').attr('data-id');
+        const priceElement = row.find('.product-price-cart'); // Lấy phần tử .product-price-cart trong hàng sản phẩm
+        const price = parseFloat(priceElement.attr('data-price')); // Lấy giá trị price từ thuộc tính data-price của phần tử
+        const subtotal = price * newValue;
+
+        $.ajax({
+    url: '{{ route("cart.updateQuantity") }}',
+    type: 'POST',
+    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+    data: {
+        id: productId,
+        quantity: newValue,
+        total: subtotal
+    },
+    success: function(response) {
+        // Kiểm tra phản hồi từ máy chủ
+        if (response.message === 'Số lượng đã được cập nhật') {
+            // Cập nhật giá mới
+            row.find('.product-subtotal').attr('data-price', subtotal); // Cập nhật giá mới vào thuộc tính data-price
+            row.find('.product-subtotal').text(subtotal); // Cập nhật giá mới trong nội dung của phần tử
+            // Cập nhật các phần tử khác cần thiết, ví dụ: tổng giá, tổng số lượng, ...
+        } else {
+            // Xử lý lỗi nếu có
+            console.log(response.message);
+        }
+    },
+    error: function(error) {
+        console.log(error);
+    }
+});
+    };
+});
+function showConfirmationDialog(event, button) {
+  event.preventDefault(); // Ngăn chặn điều hướng mặc định của thẻ a
+
+  const form = button.closest('form');
+  const id = button.getAttribute('data-id');
+  
+  Swal.fire({
+    title: 'Xác nhận',
+    text: 'Bạn có chắc chắn muốn xóa?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Có',
+    cancelButtonText: 'Không'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        type: 'POST',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: button.getAttribute('data-action'), // Sử dụng URL lấy từ thuộc tính data-action của nút
+        data: {
+          id: id
+        },
+        success: function (response) {
+          form.submit(); // Gửi yêu cầu POST để xóa sản phẩm
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+    }
+  });
+}
+  </script>
 </body>
 
 </html>

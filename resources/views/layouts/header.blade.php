@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>Furns </title>
+    <meta name="csrf-token" content="{{ csrf_token() }}"> 
     <meta name="description"
         content="240+ Best Bootstrap Templates are available on this website. Find your template for your project compatible with the most popular HTML library in the world." />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -35,19 +36,6 @@
         "url": "Replace_with_your_site_URL"
     }
     </script>
-
-    <!-- vendor css (Bootstrap & Icon Font) -->
-    <!-- <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css" />
-    <link rel="stylesheet" href="assets/css/vendor/simple-line-icons.css" />
-    <link rel="stylesheet" href="assets/css/vendor/ionicons.min.css" /> -->
-
-    <!-- plugins css (All Plugins Files) -->
-    <!-- <link rel="stylesheet" href="assets/css/plugins/animate.css" />
-    <link rel="stylesheet" href="assets/css/plugins/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="assets/css/plugins/jquery-ui.min.css" />
-    <link rel="stylesheet" href="assets/css/plugins/jquery.lineProgressbar.css">
-    <link rel="stylesheet" href="assets/css/plugins/nice-select.css" />
-    <link rel="stylesheet" href="assets/css/plugins/venobox.css" />  -->
 
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
     <link href="{{asset('theme/client/assets/css/vendor/vendor.min.css')}}" rel="stylesheet" type="text/css">
@@ -98,7 +86,7 @@
                                         <li class="dropdown-submenu">
                                             <ul class="dropdown-menu sub-menu">
                                                 @foreach ($Category as $dm)
-                                                <li><a href="">{{$dm->name}}</a></li>
+                                                <li><a href="{{ route('shop.category', $dm->id) }}">{{$dm->name}}</a></li>
                                                 @endforeach
 
                                             </ul>
@@ -118,9 +106,9 @@
                                     <a href="javascript:void(0)" class="header-action-btn search-btn"><i
                                             class="icon-magnifier" style="color:rgb(211, 163, 19)"></i></a>
                                     <div class="dropdown_search">
-                                        <form class="action-form" action="index.php?act=sanpham" method="POST">
+                                        <form class="action-form" action="{{route('home')}}" method="GET">
                                             <input class="form-control" placeholder="Nhập sản phẩm bạn muốn tìm" type="text"
-                                                name="kyw">
+                                                name="search" value="{{request('search')}}">
                                             <button class="submit" type="submit"><i class="icon-magnifier" ></i></button>
                                         </form>
                                     </div>
@@ -138,16 +126,16 @@
                                        
                                         <li><a class="dropdown-item" href="index.php?act=account">Tài khoản</a></li>
                                         <li><a class="dropdown-item" href="index.php?act=trangthaidon">Đơn mua</a></li>                            
-                                        <li><a class="dropdown-item" href="index.php?act=login">Đăng nhập / Đăng ký</a></li>
+                                        <li><a class="dropdown-item" href="{{route('login')}}">Đăng nhập / Đăng ký</a></li>
     
                                     </ul>
                                 </div>
                                 <!-- Single Wedge End -->
     
-    
-                                <a href="" class="header-action-btn header-action-btn-cart pr-0">
+
+                                <a href="{{route('client.cart')}}" class="header-action-btn header-action-btn-cart pr-0">
                                     <i class="icon-handbag" style="color:rgb(211, 163, 19)"></i>
-                                    <span class="header-action-num">0</span>
+                                    <span id="totalProduct" class="header-action-num"><?= count(session('cart', [])) ?></span>                                    {{-- <span class="header-action-num">0</span> --}}
                                     <!-- <span class="cart-amount">€30.00</span> -->
                                 </a>
                                 <a href="index.php?act=viewcart" class="header-action-btn header-action-btn-menu d-lg-none">

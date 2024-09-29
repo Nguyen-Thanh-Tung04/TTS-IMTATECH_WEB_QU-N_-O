@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- breadcrumb-area start -->
-<div class="breadcrumb-area">
+<div class="breadcrumb-area" style="height: 50px">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -40,19 +40,7 @@
                     <!-- Left Side End -->
                     <!-- Right Side Start -->
                     <div class="select-shoing-wrap d-flex align-items-center">
-                        <!-- <div class="shot-product">
-                            <p>Sort By:</p>
-                        </div>
-                        <div class="shop-select">
-                            <select class="shop-sort">
-                                <option data-display="Relevance">Relevance</option>
-                                <option value="1"> Name, A to Z</option>
-                                <option value="2"> Name, Z to A</option>
-                                <option value="3"> Price, low to high</option>
-                                <option value="4"> Price, high to low</option>
-                            </select>
-
-                        </div> -->
+                      
                     </div>
                     <!-- Right Side End -->
                 </div>
@@ -60,7 +48,6 @@
 
                 <!-- Shop Bottom Area Start -->
                 <div class="shop-bottom-area">
-
                     <div class="row">
                         @if (isset($selectedCategory))
                             @foreach ($Product as $sp)
@@ -91,8 +78,40 @@
                                         </span>
                                     </div>
                                 </div>
-                            </div>             
-                             @endforeach
+                            </div>  
+                            @endforeach
+                        @elseif (isset($SpSearch))
+                            <h1 class="pb-3">Kết quả tìm kiếm : {{request('search')}}</h1>
+                            @foreach ($SpSearch as $sp)
+                            <div class="col-lg-4  col-md-6 col-sm-6 col-xs-6" data-aos="fade-up" data-aos-delay="200">
+                                <!-- Single Prodect -->
+                                <div class="product mb-25px">
+                                    <div class="thumb">
+                                        <a href="{{route('product_detail',$sp->slug)}}" class="image">
+                                            <img src="{{Storage::url($sp->img_thumb)}}" alt="Product" />
+                                            <img class="hover-image" src="{{Storage::url($sp->img_thumb)}}" alt="Product" />
+                                        </a>
+                                        <form class="AddToCartFormItem" method=" post">
+                                            <input type="hidden" name="id" value="">
+                                            <input type="hidden" name="name" value="">
+                                            <input type="hidden" name="img" value="">
+                                            <input type="hidden" name="price" value="">
+                                            <button title="Add To Cart" type="submit" name="themcart"
+                                                class="addToCartButtonItem add-to-cart">Thêm vào giỏ hàng</button>
+                                        </form>
+                                    </div>
+                                    <div class="content">
+                                        <h5 class="title"><a href="">{{$sp->name}}</a>
+                                        </h5>
+                                        <span class="price">
+                                            <span
+                                                class="new">{{$sp->price_sale}}</span>
+                                            <span class="old">{{$sp->price}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>  
+                            @endforeach
                         @else
                             @foreach ($Product as $sp)
                             <div class="col-lg-4  col-md-6 col-sm-6 col-xs-6" data-aos="fade-up" data-aos-delay="200">
@@ -122,10 +141,12 @@
                                         </span>
                                     </div>
                                 </div>
-                            </div>                  
-                          @endforeach
+                            </div>  
+                            @endforeach
                         @endif
                     </div>
+                   
+                    
                     <!--  Pagination Area Start -->
                     <div class="pro-pagination-style text-center mb-md-30px mb-lm-30px mt-30px" data-aos="fade-up">
                         <ul>
