@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+<div class="container">
     <form action="{{route('admin.categories.update', $category)}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -25,4 +26,5 @@
         </div>
         <button type="submit" class="btn btn-success">Cập nhật</button>
     </form>
+</div>
 @endsection

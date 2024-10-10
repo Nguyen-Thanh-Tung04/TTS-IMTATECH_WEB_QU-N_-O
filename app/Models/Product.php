@@ -39,4 +39,12 @@ class Product extends Model
     public function scopeSearch($query,$term) {
         return $query->where('name','like','%' . $term . '%');
     }
+
+    // khai báo mỗi quan hệ để xóa fix bug bảng cha con
+    public function galleries() {
+        return $this->hasMany(related:ProductGallery::class);
+    }
+    public function variants() {
+        return $this->hasMany(related:ProductVariant::class);
+    }
 }

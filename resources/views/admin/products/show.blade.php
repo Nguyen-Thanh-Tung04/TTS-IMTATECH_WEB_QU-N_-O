@@ -10,7 +10,7 @@
         <li>Tên: {{$product->name}}</li>
         <li>Ảnh:
             <div style="width: 100px; height: 100px;">
-                <img src="{{Storage::url($product->image)}}" style="max-width: 100%; max-height: 100%;" alt="">
+                <img src="{{Storage::url($product->img_thumb)}}" style="max-width: 100%; max-height: 100%;" alt="">
             </div>
         </li>
         <li>Danh mục :  {{$product->category->name}}</li>

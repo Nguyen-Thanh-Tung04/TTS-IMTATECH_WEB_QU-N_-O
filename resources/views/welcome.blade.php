@@ -6,21 +6,15 @@
         <!-- Hero slider Active -->
         <div class="swiper-wrapper">
             <!-- Single slider item -->
+            @foreach ($Banner as $bn)
             <div class="hero-slide-item slider-height-2 swiper-slide d-flex">
                 <div class="hero-bg-image">
-                    <img src="{{asset('theme/client/assets/images/slider-image/slider-2-2.webp')}}" style="width: 100%;
+                    <img src="{{Storage::url($bn->img)}}" style="width: 100%;
         height: auto;" alt="">
                 </div>
                 
             </div>  
-            <!-- Single slider item -->
-            <div class="hero-slide-item slider-height-2 swiper-slide d-flex text-center">
-                <div class="hero-bg-image">
-                    <img src="{{asset('theme/client/assets/images/slider-image/slider-2-1.jpg')}}" style="width: 100%;
-        height: auto;"  alt="">
-                </div>
-                
-            </div>
+            @endforeach
         </div>
         <!-- Add Pagination -->
         <div class="swiper-pagination swiper-pagination-white"></div>
@@ -122,8 +116,7 @@
                                             <button title="Add To Cart" type="submit" name="themcart"
                                                 class="addToCartButtonItem add-to-cart">Thêm vào giỏ hàng</button>
                                         </form> --}}
-<button class="addToCartButtonItem add-to-cart btnCart" data-id="{{$sp->id}}"  onclick="addToCart(event, {{$sp->id}}, '{{$sp->name}}', {{$sp->price}}, '{{ $sp->img_thumb }}','Đen','M')">Thêm vào giỏ hàng</button>                                        {{-- <button title="Add To Cart" type="submit" name="themcart"
-                                                class="addToCartButtonItem add-to-cart">Thêm vào giỏ hàng</button> --}}
+{{-- <button class="addToCartButtonItem add-to-cart btnCart" data-id="{{$sp->id}}"  onclick="addToCart(event, {{$sp->id}}, '{{$sp->name}}', {{$sp->price}}, '{{ $sp->img_thumb }}','Đen','M')">Thêm vào giỏ hàng</button>                                        {{-- <button title="Add To Cart" type="submit" name="themcart" --}}
                                     </div>
                                     <div class="content">
                                         <h5 class="title"><a href="shop-left-sidebar.html">{{$sp->name}}</a></h5>
@@ -194,8 +187,9 @@
                                         <div class="actions">
                                             <a href="wishlist.html" class="action wishlist" title="Wishlist"><i
                                                     class="icon-heart"></i></a>
-                                            <a href="#" class="action quickview" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                                                    class="icon-size-fullscreen"></i></a>
+                                                    <a href="#" class="action quickview" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                        <i class="icon-size-fullscreen" data-id="{{ $sp->id }}"></i>
+                                                    </a>
                                             <a href="compare.html" class="action compare" title="Compare"><i
                                                     class="icon-refresh"></i></a>
                                         </div>

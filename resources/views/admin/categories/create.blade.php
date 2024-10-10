@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+    <div class="container">
     <form action="{{route('admin.categories.store')}}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
@@ -22,4 +23,5 @@
         </div>
         <button type="submit" class="btn btn-success">Tạo mới</button>
     </form>
+</div>
 @endsection

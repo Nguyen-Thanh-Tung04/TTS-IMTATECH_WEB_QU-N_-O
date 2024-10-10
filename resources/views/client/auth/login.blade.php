@@ -43,7 +43,7 @@
                         <div id="lg1" class="tab-pane active">
                             <div class="login-form-container">
                                 <div class="login-register-form">
-                                    <form action="index.php?act=login" method="post">
+                                    <form action="{{route('login')}}" method="post">
                                         @csrf
                                             <div class="mb-3">
                                                 <label for="" class="form-label">Email:</label>

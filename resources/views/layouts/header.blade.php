@@ -118,6 +118,15 @@
                                 <div class="header-bottom-set dropdown">
                                     <button class="dropdown-toggle hcol-md-12 align-self-centereader-action-btn" data-bs-toggle="dropdown">
     
+                                        {{-- @if(Auth::check())
+    @if(Auth::user()->avatar)
+        <img src="{{ asset(Auth::user()->avatar) }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">
+    @else
+        <i class="icon-user" style="color: rgb(211, 163, 19);"></i>
+    @endif
+@else
+    <i class="icon-user" style="color: rgb(211, 163, 19);"></i>
+@endif --}}
                                         <i class="icon-user" style="color:rgb(211, 163, 19);"></i>
     
                                     </button>
@@ -126,8 +135,11 @@
                                        
                                         <li><a class="dropdown-item" href="index.php?act=account">Tài khoản</a></li>
                                         <li><a class="dropdown-item" href="index.php?act=trangthaidon">Đơn mua</a></li>                            
-                                        <li><a class="dropdown-item" href="{{route('login')}}">Đăng nhập / Đăng ký</a></li>
-    
+                                        @if(Auth::check())
+                                        <li><a class="dropdown-item" href="{{ route('logout') }}">Đăng xuất</a></li>
+                                         @else
+                                        <li><a class="dropdown-item" href="{{ route('login') }}">Đăng nhập / Đăng ký</a></li>
+                                        @endif    
                                     </ul>
                                 </div>
                                 <!-- Single Wedge End -->

@@ -16,26 +16,37 @@
         <a class="nav-link" href="{{route('admin.')}}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Bảng điều khiển
-                </span></a>
-                <hr class="sidebar-divider">
+            </span></a>
+        <hr class="sidebar-divider">
 
         <a class="nav-link" href="{{route('admin.categories.index')}}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span> Danh mục
-                </span></a>
-                <hr class="sidebar-divider">
+            </span></a>
+        <hr class="sidebar-divider">
 
-         <a class="nav-link" href="{{route('admin.products.index')}}">
+        <a class="nav-link" href="{{route('admin.products.index')}}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span> Sản phẩm
-                </span></a>
-                <hr class="sidebar-divider">
+            </span></a>
+        <hr class="sidebar-divider">
 
-         <a class="nav-link" href="index.html">
+        <a class="nav-link" href="index.html">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span> Tài khoản
-                </span></a>
+            </span></a>
+        <hr class="sidebar-divider">
 
+        <a class="nav-link" href="{{route('admin.banners.index')}}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span> Banners
+            </span></a>
+        <hr class="sidebar-divider">
+
+        <a class="nav-link" href="{{route('admin.vouchers.index')}}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span> vouchers
+            </span></a>
     </li>
   
     <!-- Divider -->

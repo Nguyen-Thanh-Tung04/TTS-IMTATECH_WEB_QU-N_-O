@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\VoucherController;
+
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,5 +24,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
     });
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('banners', BannerController::class);
+    Route::resource('vouchers', VoucherController::class);
 
 });

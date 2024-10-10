@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
@@ -20,11 +21,12 @@ class HomeController extends Controller
         $SpSearch = Product::search($term)->get();
         $Category = Category::query()->get();
         $Product = Product::query()->get();
+        $Banner = Banner::query()->get();
 
         if ($term) {
             return view('shop', compact('Category', 'SpSearch'));
         } else {
-            return view('welcome', compact('Category', 'Product'));
+            return view('welcome', compact('Category', 'Product','Banner'));
         }
     }
 

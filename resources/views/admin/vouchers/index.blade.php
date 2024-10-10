@@ -1,11 +1,11 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Danh sách sản phẩm
+    Danh sách mã giảm giá
 @endsection
 
 @section('content')
-    <a href="{{route('admin.categories.create')}}">
+    <a href="{{route('admin.vouchers.create')}}">
         <button class="btn btn-success">Tạo mới</button>
     </a>
     @if (session('message'))
@@ -16,7 +16,7 @@
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Danh sách sản phẩm</h1>
+        <h1 class="h3 mb-2 text-gray-800">Danh sách mã giảm giá</h1>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -26,9 +26,12 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                             <th>ID</th>
+                            <th>ID</th>
                             <th>Tên</th>
                             <th>Ảnh</th>
+                            <th>Mệnh giá</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
                             </tr>
@@ -38,6 +41,9 @@
                                 <th>ID</th>
                                 <th>Tên</th>
                                 <th>Ảnh</th>
+                                <th>Mệnh giá</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Ngày kết thúc</th>
                                 <th>Trạng thái</th>
                                 <th>Hành động</th>
                             </tr>
@@ -45,25 +51,24 @@
                         <tbody>
                             @foreach($data as $item)
                             <tr>
-                                <td>{{$item->id}}</td>
+                                <td>{{$item->sku}}</td>
                                 <td>{{$item->name}}</td>
-                                <td>
-                                    <div style="width: 100px; height: 100px;">
-                                        <img src="{{Storage::url($item->cover)}}" style="max-width: 100%; max-height: 100%;" alt="">
-                                    </div>
-                                </td>
+                                <td>{{$item->quantity}}</td>
+                                <td>{{$item->discount}}</td>
+                                <td>{{$item->created_at}}</td>  
+                                <td>{{$item->end_at}}</td>
                                 <td>
                                     {!! $item->is_active ? '<span class="badge bg-success"> Hoạt động </span>' :
                                         ' <span class="badge bg-danger"> Không hoạt động </span>'!!}
                                 </td>
                                 <td class="d-flex ">
-                                    <a href="{{route('admin.categories.show', $item)}}">
+                                    <a href="{{route('admin.vouchers.show', $item)}}">
                                         <button class="btn btn-success ">Xem</button>
                                     </a>
-                                    <a href="{{route('admin.categories.edit', $item)}}">
+                                    <a href="{{route('admin.vouchers.edit', $item)}}">
                                         <button class="btn btn-warning mx-2">Sửa</button>
                                     </a>
-                                    <form action="{{route('admin.categories.destroy', $item->id)}}" method="POST">
+                                    <form action="{{route('admin.vouchers.destroy', $item)}}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa mục này không?')">Xóa</button>
