@@ -281,7 +281,7 @@
     document.getElementById('selectedSize').value = selectedSize;
     }
     
-    function addToCart(event, productId, productName, productPrice, productImage,color,size) {
+    function addToCart(event, productId, productName, productPrice, productImage,sku,color,size) {
       event.preventDefault(); // Prevent default form submission behavior
       var color = document.getElementById('selectedColor').value ||'Đen';
       var size = document.getElementById('selectedSize').value || 'M';
@@ -295,6 +295,7 @@
           name: productName,
           price: productPrice,
           img: productImage,
+          sku: sku,
           color: color,
           size: size
         },
@@ -396,7 +397,117 @@ function showConfirmationDialog(event, button) {
     }
   });
 }
+
+// Mã giảm giá 
+// JavaScript (ví dụ sử dụng jQuery)
+$('#discount-form').on('submit', function(event) {
+    event.preventDefault();
+
+    const formData = $(this).serialize();
+    const url = "{{ route('discount') }}";
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        data: formData,
+        success: function(response) {
+  if (response.success) {
+    // Hiển thị thông báo thành công
+    Swal.fire({
+      icon: 'success',
+      title: 'Thành công',
+      text: response.message
+    });
+
+    // Cập nhật tổng tiền (cập nhật theo discountAmount)
+    const newTotal = parseFloat($('#total').text()) - response.discountAmount;
+    $('#total').text(newTotal.toFixed(2)); 
+  } else {
+    // Hiển thị thông báo lỗi
+    Swal.fire({
+      icon: 'error',
+      title: 'Lỗi',
+      text: response.error
+    });
+  }
+}
+
+    });
+});
+
+// Thông báo đặt hàng thành công 
+$(document).ready(function(){
+    $('#orderButton').on('click', function(e){
+        // Hiển thị thông báo đặt hàng thành công
+        Swal.fire({
+            title: 'Thông báo',
+            text: 'Đặt hàng thành công !',
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 6000,
+            showCloseButton: true,
+        });
+    });
+});
+
+$(document).ready(function() {
+    $('.cancel-order-btn').click(function() {
+        var form = $('#cancelOrderForm');
+        var formData = form.serialize();
+
+        $.ajax({
+    url: form.attr('action'),
+    type: form.attr('method'),
+    data: formData,
+    success: function(response) {
+        // Xử lý thành công, cập nhật giao diện
+        console.log(response.message);
+        // Ví dụ: cập nhật trạng thái đơn hàng trên giao diện
+        $('#order-status-' + response.orderId).text('Cancelled');
+        window.location.href = window.location.href;
+        
+        // Sửa đoạn mã để hiển thị thông báo SweetAlert2
+        Swal.fire({
+            title: 'Thông báo',
+            text: 'Đặt hàng thành công !',
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 6000,
+            showCloseButton: true
+        });
+    },
+    error: function(xhr, status, error) {
+        console.log('Error:', error);
+        // Xử lý khi có lỗi xảy ra trong quá trình gửi AJAX
+        Swal.fire({
+            title: 'Lỗi',
+            text: 'Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại sau.',
+            icon: 'error'
+        });
+    }
+});
+    });
+});
+
+// loadding
+var loader = function() {
+        setTimeout(function() {
+            $('#loader').css({
+                'opacity': 0,
+                'visibility': 'hidden'
+            });
+        }, 1000);
+    };
+    $(function() {
+        loader();
+    });
   </script>
+  
 </body>
 
 </html>

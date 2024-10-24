@@ -45,8 +45,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function isAdmin () {
-        return $this->type === self::TYPE_ADMIN;
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'user_id'); // Định nghĩa tên cột khóa ngoại nếu không phải là 'order_id'
     }
+
+    
 }

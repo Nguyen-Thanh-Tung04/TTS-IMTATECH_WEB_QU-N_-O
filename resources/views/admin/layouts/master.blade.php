@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> 
 
-    <title>SB Admin 2 - Dashboard</title>
+
+    <title>Ùn😎</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{asset('theme/admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -19,6 +21,36 @@
 
     <!-- Custom styles for this template-->
     <link href="{{asset('theme/admin/css/sb-admin-2.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js
+"></script>
+<style>
+    .your-order {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .kh, .don {
+        width: 100%; /* Đặt chiều rộng cho các phần tử */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .your-order-area {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .kh, .don {
+            width: 100%; /* Hiển thị toàn bộ chiều rộng trên thiết bị nhỏ */
+            margin-bottom: 10px;
+        }
+    }
+
+    
+</style>
 
 </head>
 
@@ -195,7 +227,7 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Tùng </span>
                             <img class="img-profile rounded-circle"
                                  src="{{asset('theme/admin/img/undraw_profile.svg')}}">
                         </a>
@@ -215,7 +247,7 @@
                                 Activity Log
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <a class="dropdown-item" href="{{ route('logout') }}" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Logout
                             </a>
@@ -262,6 +294,47 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    // update trạng thái đơn hàng
+    function updateOrderStatus(selectElement, orderId) {
+    let newStatus = selectElement.value;
+    fetch('{{ route('admin.orders.update', 1) }}', {
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    body: JSON.stringify({ orderId: orderId, newStatus: newStatus }),
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+})
+.then(data => {
+    console.log(data.message);
+
+    if (data.success) {
+        // Hiển thị thông báo thành công
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công',
+            text: data.message
+        });
+    } else {
+        // Cập nhật giao diện hoặc hiển thị thông báo thất bại
+        // Ví dụ: document.getElementById('order-status-' + orderId).textContent = newStatus;
+    }
+})
+.catch(error => {
+    console.error('Error updating order status:', error);
+    // Hiển thị thông báo lỗi cho người dùng
+});}
+ 
+ </script>
 
 <!-- Bootstrap core JavaScript-->
 <script src="{{asset('theme/admin/vendor/jquery/jquery.min.js')}}"></script>

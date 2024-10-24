@@ -1,8 +1,7 @@
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Furns </title>
+    <title>Ùn😎 </title>
     <meta name="csrf-token" content="{{ csrf_token() }}"> 
     <meta name="description"
         content="240+ Best Bootstrap Templates are available on this website. Find your template for your project compatible with the most popular HTML library in the world." />
@@ -48,7 +47,118 @@
     <!-- Main Style -->
     <link href="{{asset('theme/client/assets/css/style.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('theme/client/assets/css/css.css')}}" rel="stylesheet" type="text/css">
-    <style></style>
+    <style>
+        .your-order {
+            display: flex;
+            justify-content: space-around;
+        }
+    
+        .kh, .don {
+            width: 100%; /* Đặt chiều rộng cho các phần tử */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    
+        @media (max-width: 768px) {
+            .your-order-area {
+                flex-direction: column;
+                align-items: center;
+            }
+    
+            .kh, .don {
+                width: 100%; /* Hiển thị toàn bộ chiều rộng trên thiết bị nhỏ */
+                margin-bottom: 10px;
+            }
+        }
+
+        /* loadding */
+        * {
+        /* reset lại margin và padding cho các tag */
+        margin: 0;
+        padding: 0;
+    }
+
+    #loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 99999;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .circle {
+        height: 40px;
+        margin: 50px auto;
+        position: relative;
+        text-align: center;
+        width: 40px;
+        -webkit-animation: circle_dot 2.0s infinite linear;
+        animation: circle_dot 2.0s infinite linear;
+    }
+
+    .circle1,
+    .circle2 {
+        height: 60%;
+        display: inline-block;
+        background-color: #ef5f38;
+        border-radius: 100%;
+        position: absolute;
+        top: 0;
+        width: 60%;
+        -webkit-animation: circle_bounce 2.0s infinite ease-in-out;
+        animation: circle_bounce 2.0s infinite ease-in-out;
+    }
+
+    .circle2 {
+        bottom: 0;
+        top: auto;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+    }
+
+    @-webkit-keyframes circle_dot {
+        100% {
+            -webkit-transform: rotate(360deg)
+        }
+    }
+
+    @keyframes circle_dot {
+        100% {
+            transform: rotate(360deg);
+            -webkit-transform: rotate(360deg)
+        }
+    }
+
+    @-webkit-keyframes circle_bounce {
+
+        0%,
+        100% {
+            -webkit-transform: scale(0.0)
+        }
+
+        50% {
+            -webkit-transform: scale(1.0)
+        }
+    }
+
+    @keyframes circle_bounce {
+
+        0%,
+        100% {
+            -webkit-transform: scale(0.0);
+            transform: scale(0.0);
+        }
+
+        50% {
+            -webkit-transform: scale(1.0);
+            transform: scale(1.0);
+        }
+    }
+    </style>
 
 </head>
 
@@ -116,25 +226,18 @@
     
                                 <!-- Single Wedge Start -->
                                 <div class="header-bottom-set dropdown">
-                                    <button class="dropdown-toggle hcol-md-12 align-self-centereader-action-btn" data-bs-toggle="dropdown">
-    
-                                        {{-- @if(Auth::check())
-    @if(Auth::user()->avatar)
-        <img src="{{ asset(Auth::user()->avatar) }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">
-    @else
-        <i class="icon-user" style="color: rgb(211, 163, 19);"></i>
-    @endif
-@else
-    <i class="icon-user" style="color: rgb(211, 163, 19);"></i>
-@endif --}}
-                                        <i class="icon-user" style="color:rgb(211, 163, 19);"></i>
-    
+                                    <button class="dropdown-toggle hcol-md-12 align-self-center reader-action-btn" data-bs-toggle="dropdown">
+                                        @if(Auth::check())
+                                            <img style="height: 30px; width:30px" class="img-profile rounded-circle" src="{{asset('theme/admin/img/undraw_profile.svg')}}">
+                                        @else
+                                            <i class="icon-user" style="color:rgb(211, 163, 19);"></i>
+                                        @endif
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
     
                                        
                                         <li><a class="dropdown-item" href="index.php?act=account">Tài khoản</a></li>
-                                        <li><a class="dropdown-item" href="index.php?act=trangthaidon">Đơn mua</a></li>                            
+                                        <li><a class="dropdown-item" href="{{ route('clients.orderhistry') }}">Đơn mua</a></li>                            
                                         @if(Auth::check())
                                         <li><a class="dropdown-item" href="{{ route('logout') }}">Đăng xuất</a></li>
                                          @else
@@ -144,12 +247,17 @@
                                 </div>
                                 <!-- Single Wedge End -->
     
-
+                                @if(Auth::check())
                                 <a href="{{route('client.cart')}}" class="header-action-btn header-action-btn-cart pr-0">
                                     <i class="icon-handbag" style="color:rgb(211, 163, 19)"></i>
                                     <span id="totalProduct" class="header-action-num"><?= count(session('cart', [])) ?></span>                                    {{-- <span class="header-action-num">0</span> --}}
-                                    <!-- <span class="cart-amount">€30.00</span> -->
-                                </a>
+                                </a>                              
+                                @else
+                                <a href="{{route('login')}}" class="header-action-btn header-action-btn-cart pr-0">
+                                    <i class="icon-handbag" style="color:rgb(211, 163, 19)"></i>
+                                    <span id="totalProduct" class="header-action-num"></span>                                    {{-- <span class="header-action-num">0</span> --}}
+                                </a>  
+                                @endif
                                 <a href="index.php?act=viewcart" class="header-action-btn header-action-btn-menu d-lg-none">
                                     <i class="icon-menu" style="color:rgb(211, 163, 19)"></i>
                                 </a>

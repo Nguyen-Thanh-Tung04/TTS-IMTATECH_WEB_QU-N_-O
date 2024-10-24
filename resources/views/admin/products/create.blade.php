@@ -45,11 +45,21 @@
                                     <label for="product-title-input" class="form-label">Tên</label>
                                     <input type="text" class="form-control" id="product-title-input" name="name"
                                            placeholder="Enter product title">
+                                           @if ($errors->has('name'))
+                                           <div class="alert alert-danger">{{ $errors->first('name') }}</div>
+                                       @endif
+                                       @if ($errors->has('product_variants'))
+                                       <div class="alert alert-danger">{{ $errors->first('product_variants') }}</div>
+                                       @endif
                                 </div>
                                 <div class="mb-3">
                                     <label for="product-title-input" class="form-label">Giá</label>
                                     <input type="text" class="form-control" id="product-title-input" name="price"
                                            placeholder="Enter product title">
+                                           @if ($errors->has('price'))
+                                           <div class="alert alert-danger">{{ $errors->first('price') }}</div>
+                                       @endif
+                                       
                                 </div>
                                 <div class="mb-3">
                                     <label for="product-title-input" class="form-label">Giá sale</label>
@@ -58,14 +68,12 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Mô tả sản phẩm</label>
-                                    <div id="ckeditor-classic" name="description">
-                                        <ul>
-                                            <li>Kích thước: </li>
-                                            <li>Chất liệu : </li>
-                                            <li>Màu sắc   : </li>
-                                            <li>Thiết kế  : </li>
-                                        </ul>
-                                    </div>
+                                    <textarea name="description" id="ckeditor-classic" rows="4" cols="50">
+                                        
+                                    </textarea>
+                                    @if ($errors->has('description'))
+    <div class="alert alert-danger">{{ $errors->first('description') }}</div>
+@endif
                                 </div>
                             </div>
                         </div>
@@ -151,45 +159,112 @@
                         <div class="collapse show" id="collapseProductGallery">
                             <div class="card-body">
                                 <div class="mb-4">
-                                    <table class="table">
+                                    <table class="table" id="product-variants-table">
                                         <thead>
-                                        <tr>
-                                            <th>Size</th>
-                                            <th>Màu</th>
-                                            <th>Image</th>
-                                            <th>Số lượng</th>
-                                        </tr>
+                                            <tr>
+                                                <th>Size</th>
+                                                <th>Màu</th>
+                                                <th>Image</th>
+                                                <th>Số lượng</th>
+                                                <th>Action</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        @php $amount = 5;@endphp
-                                        @for($index = 1; $index <= $amount; $index++)
-                                            <tr>
-                                                <td>
-                                                    <select name="product_variants[{{$index}}][size]" class="form-control">
-                                                        @foreach($sizes as $size_id => $size_name)
-                                                            <option value="{{$size_id}}">{{$size_name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select name="product_variants[{{$index}}][color]" class="form-control">
-                                                        @foreach($colors as $color_id => $color_name)
-                                                            <option value="{{$color_id}}">{{$color_name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <input type="file" alt="" name="product_variants[{{$index}}][image]" class="form-control">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="product_variants[{{$index}}][quantity]">
-                                                </td>
-                                            </tr>
-                                        @endfor
+                                            @php $amount = 5; @endphp
+                                            @for($index = 1; $index <= $amount; $index++)
+                                                <tr>
+                                                    <td>
+                                                        <select name="product_variants[{{$index}}][size]" class="form-control">
+                                                            @foreach($sizes as $size_id => $size_name)
+                                                                <option value="{{$size_id}}">{{$size_name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="product_variants[{{$index}}][color]" class="form-control">
+                                                            @foreach($colors as $color_id => $color_name)
+                                                                <option value="{{$color_id}}">{{$color_name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="file" name="product_variants[{{$index}}][image]" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="product_variants[{{$index}}][quantity]">
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-danger delete-variant">Xóa</button>
+                                                    </td>
+                                                </tr>
+                                            @endfor
                                         </tbody>
                                     </table>
-                                    <button class="btn btn-success">Thêm biến thể</button>
+                                   
+                                    <a class="btn btn-success" id="add-variant">Thêm biến thể</a>
                                 </div>
+                                @if ($errors->has('product_variants'))
+                                <div class="alert alert-danger">{{ $errors->first('product_variants') }}</div>
+                                @endif
+                                
+                                <script>
+                                    document.getElementById('add-variant').addEventListener('click', function() {
+                                        var table = document.getElementById('product-variants-table').getElementsByTagName('tbody')[0];
+                                        var row = table.insertRow(-1);
+                                        var index = table.rows.length - 1;
+                                
+                                        var sizeSelect = document.createElement('select');
+                                        sizeSelect.name = 'product_variants[' + index + '][size]';
+                                        sizeSelect.className = 'form-control';
+                                        @foreach($sizes as $size_id => $size_name)
+                                            var sizeOption = document.createElement('option');
+                                            sizeOption.value = '{{$size_id}}';
+                                            sizeOption.textContent = '{{$size_name}}';
+                                            sizeSelect.appendChild(sizeOption);
+                                        @endforeach
+                                
+                                        var colorSelect = document.createElement('select');
+                                        colorSelect.name = 'product_variants[' + index + '][color]';
+                                        colorSelect.className = 'form-control';
+                                        @foreach($colors as $color_id => $color_name)
+                                            var colorOption = document.createElement('option');
+                                            colorOption.value = '{{$color_id}}';
+                                            colorOption.textContent = '{{$color_name}}';
+                                            colorSelect.appendChild(colorOption);
+                                        @endforeach
+                                
+                                        var imageInput = document.createElement('input');
+                                        imageInput.type = 'file';
+                                        imageInput.name = 'product_variants[' + index + '][image]';
+                                        imageInput.className = 'form-control';
+                                
+                                        var quantityInput = document.createElement('input');
+                                        quantityInput.type = 'text';
+                                        quantityInput.name = 'product_variants[' + index + '][quantity]';
+                                
+                                        var deleteButton = document.createElement('button');
+                                        deleteButton.className = 'btn btn-danger delete-variant';
+                                        deleteButton.textContent = 'Xóa';
+                                
+                                        var cell1 = row.insertCell(0);
+                                        var cell2 = row.insertCell(1);
+                                        var cell3 = row.insertCell(2);
+                                        var cell4 = row.insertCell(3);
+                                        var cell5 = row.insertCell(4);
+                                
+                                        cell1.appendChild(sizeSelect);
+                                        cell2.appendChild(colorSelect);
+                                        cell3.appendChild(imageInput);
+                                        cell4.appendChild(quantityInput);
+                                        cell5.appendChild(deleteButton);
+                                    });
+                                
+                                    document.addEventListener('click', function(e) {
+                                        if (e.target && e.target.classList.contains('delete-variant')) {
+                                            e.target.closest('tr').remove();
+                                        }
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>

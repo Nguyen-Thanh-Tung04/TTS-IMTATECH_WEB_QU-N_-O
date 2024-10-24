@@ -55,7 +55,9 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Mô tả sản phẩm</label>
-                                <textarea id="ckeditor-classic" name="description"></textarea>
+                                <textarea id="ckeditor-classic" name="description" >
+                                    {{ $product->description }}
+                                </textarea>
                             </div>
                         </div>
                     </div>
@@ -171,31 +173,30 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @php $amount = 5;@endphp
-                                    @for($index = 1; $index <= $amount; $index++)
-                                        <tr>
-                                            <td>
-                                                <select name="product_variants[{{$index}}][size]" class="form-control">
-                                                    @foreach($sizes as $size_id => $size_name)
-                                                        <option value="{{$size_id}}">{{$size_name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select name="product_variants[{{$index}}][color]" class="form-control">
-                                                    @foreach($colors as $color_id => $color_name)
-                                                        <option value="{{$color_id}}">{{$color_name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="file" alt="" name="product_variants[{{$index}}][image]" class="form-control">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="product_variants[{{$index}}][quantity]" value="{{$product->quantity}}">
-                                            </td>
-                                        </tr>
-                                    @endfor
+                                        @foreach($productVariants as $variant)
+                                            <tr>
+                                                <td>
+                                                    <select name="product_variants[{{$variant->id}}][size]" class="form-control">
+                                                        @foreach($sizes as $size_id => $size_name)
+                                                            <option value="{{$size_id}}" @if($size_id == $variant->size->id) selected @endif>{{$size_name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="product_variants[{{$variant->id}}][color]" class="form-control">
+                                                        @foreach($colors as $color_id => $color_name)
+                                                            <option value="{{$color_id}}" @if($color_id == $variant->color->id) selected @endif>{{$color_name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="file" alt="" name="product_variants[{{$variant->id}}][image]" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="product_variants[{{$variant->id}}][quantity]" value="{{$variant->quantity}}">
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                                 <button class="btn btn-success">Thêm biến thể</button>
@@ -222,10 +223,9 @@
                         <!-- end card body -->
                         <div class="card-body">
                             <label for="choices-category-input" class="form-label">Danh mục sản phẩm</label>
-                            <select class="form-control" aria-label="Default select example"
-                                    id="choices-category-input" name="category_id">
+                            <select class="form-control" aria-label="Default select example" id="choices-category-input" name="category_id">
                                 @foreach($categories as $id => $name)
-                                    <option value="{{$id}}"> {{$name}}</option>
+                                    <option value="{{$id}}" {{ $id == $product->category_id ? 'selected' : '' }}> {{$name}}</option>
                                 @endforeach
                             </select>
                             <label for="choices-publish-status-input" class="form-label">Trạng thái</label>
@@ -238,12 +238,10 @@
                                 </option>
                             @endforeach
                             </select> --}}
-                            <select class="form-control form-select-lg mb-3" id="choices-publish-status-input"
-                                        aria-label="Default select example" name="is_active">
-                                    <option selected>-----------Trạng thái ----------</option>
-                                    <option value="1">Hoạt động</option>
-                                    <option value="0">Không hoạt động</option>
-                                </select>
+                            <select class="form-control form-select-lg mb-3" id="choices-publish-status-input" aria-label="Default select example" name="is_active">
+                                <option value="1" {{ $product->is_active ? 'selected' : '' }}>Hoạt động</option>
+                                <option value="0" {{ !$product->is_active ? 'selected' : '' }}>Không hoạt động</option>
+                            </select>
                             {{--  Loại sản phẩm                      --}}
                             <label for="choices-publish-type-input" class="form-label">Loại sản phẩm</label>
                             @php
@@ -255,16 +253,16 @@
                             @endphp
                             <div class="form-group custom-control custom-checkbox small d-flex align-items-center">
                                 @foreach($types as $key => $value)
-                                    <div class="col-md-3">
-                                        <input type="checkbox" class="custom-control-input" value="{{$key}}" name="{{$key}}" id="customCheck-{{$key}}">
-                                        <label class="custom-control-label" for="customCheck-{{$key}}">{{$value}}</label>
-                                    </div>
-                                @endforeach
+                                <div class="col-md-3">
+                                    <input type="checkbox" class="custom-control-input" value="{{$key}}" name="{{$key}}" id="customCheck-{{$key}}"
+                                           {{ $product->{$key} ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="customCheck-{{$key}}">{{$value}}</label>
+                                </div>
+                            @endforeach
                             </div>
                             {{--                        Mã sản phẩm --}}
                             <label for="choices-publish-type-input" class="form-label">Mã sản phẩm</label>
-                            <input type="text" class="form-control" name="sku" value="{{strtoupper(\Str::random(8))}}">
-                        </div>
+                            <input type="text" class="form-control" name="sku" value="{{$product->sku}}">                        </div>
                     </div>
                 </div>
             </div>

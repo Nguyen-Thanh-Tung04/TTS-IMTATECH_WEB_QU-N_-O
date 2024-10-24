@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+
+use App\Http\Controllers\client\CartController; // Assuming this exists for cart handling
+use App\Mail\OrderEmail;
+use App\Models\Order;
+use App\Models\OrderItem; // Corrected model name
+
+class PaymentController extends Controller
+{
+    public function place(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|min:10|max:15',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $pay_method = $request->payment_method;
+
+        if ($pay_method == 'cash') {
+            return $this->cash($pay_method, $request);
+        } else if ($pay_method == 'vnpay') {
+            return $this->vnpay_payment($pay_method, $request);
+        }
+    }
+
+    public function cash($pay_method, $request)
+    {
+        // ... (Logic for cash payment processing)
+
+        // ... (Save order to database)
+
+        return redirect()->route('clients.bill', ['order_id' => $order->id])->with('success', 'Đặt hàng thành công !');
+    }
+
+    public function vnpay_payment($pay_method, Request $request)
+    {
+        // Validate user input (name, address, phone)
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|min:10|max:15',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        // VNPay credentials (replace with your actual values)
+        $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+        $vnp_Returnurl = route('clients.bill'); // Success redirect URL
+        $vnp_TmnCode = "YOUR_VNPAY_MERCHANT_CODE";  // Replace with your VNPAY merchant code
+        $vnp_HashSecret = "YOUR_VNPAY_SECRET_KEY";  // Replace with your VNPAY secret key
+
+        // Generate unique order reference number
+        $vnp_TxnRef = $request->sku ?: strtoupper(\Str::random(8));
+
+        // Order data
+        $orderData = [
+            'user_id' => Auth::id(), // Assuming user authentication
+            'sku' => $request->sku,
+            'receiver_name' => $request->name,
+            'receiver_phone' => $request->phone,
+            'receiver_address' => $request->address,
+            'payment_method' => $request->payment_method,
+            'total_price' => $request->total_price * 100, // Convert to cents
+            // ... (Add other relevant order details)
+        ];
+
+        // Save order to database before VNPay redirection to ensure data integrity
+        $order = Order::create($orderData);
+
+        // Prepare VNPay data, including processing cart items
+        $vnp_Amount = $order->total_price;
+        $vnp_OrderInfo = 'Thanh toán đơn hàng ' . $order->sku; // Descriptive order info
+
+        $cart = session()->get('cart');  // Assuming cart data is in session
+
+        $orderItems = []; // Array to store order item data
+        if ($cart) {
+            foreach ($cart as $item) {
+                $orderItem = new OrderItem();
+                $orderItem->order_id = $order->id;
+                $orderItem->product_name = $item['name'];
+                $orderItem->product

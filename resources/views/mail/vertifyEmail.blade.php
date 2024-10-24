@@ -12,7 +12,7 @@
        Mời bạn xác thực tài khoản để tiếp tục sử dụng các tính năng trên hệ thống
     </p>
     <button>
-        <a href="http://asigment.test:8888/auth/vertify/{{$token}}"></a>
+        <a href="http://asigment.test:8888/auth/vertify/{{$token}}">Xác thực</a>
     </button>
 </body>
 </html>

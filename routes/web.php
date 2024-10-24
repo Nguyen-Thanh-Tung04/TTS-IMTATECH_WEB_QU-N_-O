@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\client\CartController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\PaymentController;
+
 
 
 /*
@@ -33,26 +35,21 @@ Route::post('/updateQuantity', [CartController::class, 'updateQuantity'])->name(
 Route::post('/removeCartItem', [CartController::class, 'removeCartItem'])->name('cart.removeCartItem');
 Route::post('/removeCartOver', [CartController::class, 'removeCartOver'])->name('cart.removeCartOver');
 Route::get('/order', [CartController::class, 'order'])->name('client.order');
+Route::post('/place', [PaymentController::class, 'place'])->name('client.place');
+
 Route::post('/bill', [CartController::class, 'bill'])->name('client.bill');
+Route::get('/bills', [CartController::class, 'bills'])->name('clients.bill');
+Route::get('/orderhistry', [CartController::class, 'orderhistry'])->name('clients.orderhistry');
+Route::get('/histryDetail/{id}', [CartController::class, 'histryDetail'])->name('clients.histryDetail');
+// voucher
+Route::post('/discount', [CartController::class, 'discount'])->name('discount');
+Route::post('/updateOrder', [CartController::class, 'updateOrder'])->name('update.order');
+
+// Thanh toán
+Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment'])->name('vnpay_payment');
 
 
-// Route::get('/', function () {
-//     // return view('welcome'); / Hiển thị view
-//     // return "Hello World!"; // Hiển thị chuỗi
-//     // return ['phở bò', 'cơm rang']; // Hiển thị mảng
-//     return response()->json([
-//         'name' => 'Vũ Thị Thúy',
-//         'email' => 'thuyvt66@fpt.edu.vn'
-//     ]); // Hiển thị dạng object json
-//      return view('welcome'); // Hiển thị view
-// //    // return "Hello World!"; // Hiển thị chuỗi
-// //    // return ['phở bò', 'cơm rang']; // Hiển thị mảng
-// //    return response()->json([
-// //        'name' => 'Vũ Thị Thúy',
-// //        'email' => 'thuyvt66@fpt.edu.vn'
-// //    ]); // Hiển thị dạng object json
-// })->name('welcome');
-// Login
+// Login 
 Route::get('auth/login' ,[LoginController::class, 'index'])
     ->name('login');
 Route::post('auth/login' ,[LoginController::class, 'login'])
@@ -67,11 +64,3 @@ Route::get('auth/register' ,[RegisterController::class, 'index'])
     ->name('register');
 Route::post('auth/register' ,[RegisterController::class, 'register'])
     ->name('register');
-
-Route::get('admin', function () {
-    return 'ĐÂy là admin';
-})->middleware(\App\Http\Middleware\CheckAdminMiddleware::class);
-
-Route::get('admin', function () {
-    return 'Đây là admin';
-})->middleware('isAdmin');

@@ -1,6 +1,12 @@
 @extends('layouts.master')
 
 @section('content')
+<div id="loader">
+    <div class="circle">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+    </div>
+</div>
 <div class="section ">
     <div class="hero-slider h-75 swiper-container slider-nav-style-1 slider-dot-style-1 dot-color-white">
         <!-- Hero slider Active -->
@@ -121,7 +127,7 @@
                                     <div class="content">
                                         <h5 class="title"><a href="shop-left-sidebar.html">{{$sp->name}}</a></h5>
                                         <span class="price">
-                                            <span class="new">{{$sp->price}}</span>
+                                            <span class="new">{{ number_format($sp->price, 0, ',', '.')}} đ</span>
                                         </span>
                                     </div>
                                 </div>
@@ -172,7 +178,7 @@
                     <!-- 3rd tab start -->
                     <div class="tab-pane fade" id="tab-product-sale-item">
                         <div class="row">
-                            @foreach ($Product as $sp)
+                            @foreach ($productsOnSale as $sp)
                             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up" data-aos-delay="200">
                                 <!-- Single Prodect -->
                                 <div class="product">

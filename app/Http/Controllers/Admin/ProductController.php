@@ -64,17 +64,33 @@ class ProductController extends Controller
             // tạo dữ liệu cho bảng product variants
             // tạo dữ liệu cho bảng product variants
             foreach ($request->product_variants as $item) {
-                $variant = ProductVariant::query()->firstOrNew([
-                    'product_size_id' => $item['size'],
-                    'product_color_id' => $item['color'],
-                    'product_id' => $product->id
-                ]);
-
-                $variant->image = !empty($item['image']) ? Storage::put('product_variants', $item['image']) : '';
-                $variant->quantity = !empty($item['quantity']) ? $item['quantity'] : 0;
-
-                $variant->save();
+                if ($item['quantity'] > 0) {
+                    $variant = ProductVariant::query()->firstOrNew([
+                        'product_size_id' => $item['size'],
+                        'product_color_id' => $item['color'],
+                        'product_id' => $product->id
+                    ]);
+            
+                    $variant->image = !empty($item['image']) ? Storage::put('product_variants', $item['image']) : '';
+                    $variant->quantity = $item['quantity'];
+            
+                    $variant->save();
+                }
             }
+            foreach ($request->product_variants as $item) {
+    if ($item['quantity'] > 0) {
+        $variant = ProductVariant::query()->firstOrNew([
+            'product_size_id' => $item['size'],
+            'product_color_id' => $item['color'],
+            'product_id' => $product->id
+        ]);
+
+        $variant->image = !empty($item['image']) ? Storage::put('product_variants', $item['image']) : '';
+        $variant->quantity = $item['quantity'];
+
+        $variant->save();
+    }
+}
             // tạo dữ liệu cho bảng product gallery
             foreach ($request->product_galleries as $item) {
                 ProductGallery::query()->create([
@@ -83,7 +99,7 @@ class ProductController extends Controller
                 ]);
             }
             DB::commit();
-            return redirect()->route('admin.products.index');
+            return redirect()->route('admin.products.index')->with('message', 'Thêm thành công');
         } catch (\Exception $exception) {
             DB::rollBack();
             dd($exception->getMessage());
@@ -109,7 +125,9 @@ class ProductController extends Controller
         $categories = Category::query()->pluck('name', 'id')->all();
         $sizes = ProductSize::query()->pluck('name', 'id')->all();
         $colors = ProductColor::query()->pluck('name', 'id')->all();
-        return view(self::PATH_VIEW . __FUNCTION__, compact('product', 'categories', 'sizes', 'colors'));
+        $productVariants = $product->variants()->with('size', 'color')->get();
+
+        return view(self::PATH_VIEW . __FUNCTION__, compact('product', 'categories', 'sizes', 'colors', 'productVariants'));
     }
 
     /**

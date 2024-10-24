@@ -20,13 +20,15 @@ class HomeController extends Controller
         $term = $request->input('search');
         $SpSearch = Product::search($term)->get();
         $Category = Category::query()->get();
-        $Product = Product::query()->get();
+        $Product = Product::query()->limit(8)->get();
         $Banner = Banner::query()->get();
+        $productsOnSale = Product::where('is_40_sale', true)->limit(8)->get();
+
 
         if ($term) {
             return view('shop', compact('Category', 'SpSearch'));
         } else {
-            return view('welcome', compact('Category', 'Product','Banner'));
+            return view('welcome', compact('Category', 'Product','Banner','productsOnSale'));
         }
     }
 

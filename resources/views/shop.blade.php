@@ -2,6 +2,12 @@
 
 @section('content')
 <!-- breadcrumb-area start -->
+<div id="loader">
+    <div class="circle">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+    </div>
+</div>
 <div class="breadcrumb-area" style="height: 50px">
     <div class="container">
         <div class="row">
