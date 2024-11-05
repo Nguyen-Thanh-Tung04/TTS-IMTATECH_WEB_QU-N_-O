@@ -28,7 +28,7 @@ class HomeController extends Controller
         if ($term) {
             return view('shop', compact('Category', 'SpSearch'));
         } else {
-            return view('welcome', compact('Category', 'Product','Banner','productsOnSale'));
+            return view('welcome', compact('Category', 'Product', 'Banner', 'productsOnSale'));
         }
     }
 
@@ -43,8 +43,14 @@ class HomeController extends Controller
             ->join('product_sizes', 'product_variants.product_size_id', '=', 'product_sizes.id')
             ->select('product_variants.*', 'product_colors.name as color', 'product_sizes.name as size')
             ->get();
-        return view('product_detail', compact('Category', 'Product', 'variants'));
+
+        // Lọc ra các giá trị color và size duy nhất
+        $uniqueColors = $variants->unique('color')->pluck('color');
+        $uniqueSizes = $variants->unique('size')->pluck('size');
+
+        return view('product_detail', compact('Category', 'Product', 'uniqueColors', 'uniqueSizes'));
     }
+
     public function shop()
     {
         $Category = Category::query()->get();

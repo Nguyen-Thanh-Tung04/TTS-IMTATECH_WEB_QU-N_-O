@@ -86,20 +86,20 @@
                             <div class="pro-details-color-wrap mx-3">
                                 <span>Màu</span>
                                 <select class="form-control" id="selectedColor" name="color_name" onchange="setSelectedColor(this)" required>
-                                    @foreach ($variants as $c)
-                                    <option value="{{ $c->color }}">{{ $c->color }}</option>
+                                    @foreach ($uniqueColors as $color)
+                                        <option value="{{ $color }}">{{ $color }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="pro-details-color-wrap">
                                 <span>Kích cỡ</span>
                                 <select class="form-control" id="selectedSize" name="size_name" onchange="setSelectedSize(this)" required>
-                                    @foreach ($variants as $s)
-                                    <option value="{{ $s->size }}">{{ $s->size }}</option>
+                                    @foreach ($uniqueSizes as $size)
+                                        <option value="{{ $size }}">{{ $size }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div>                        
                         
                         <div class=" pro-details-quality">
                             <div class="cart-plus-minus">
