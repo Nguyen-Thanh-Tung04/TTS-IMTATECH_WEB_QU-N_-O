@@ -22,22 +22,33 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // Validate dữ liệu từ request
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
-
-    // Thử đăng nhập người dùng
-    $credentials = $request->only('email', 'password');
-    if (Auth::attempt($credentials)) {
-        // Đăng nhập thành công, chuyển hướng đến trang mong muốn
-        return redirect()->route('home'); // Thay 'dashboard' bằng tên route mong muốn
+        // Validate the request data
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+    
+        // Get the user's credentials from the request
+        $credentials = $request->only('email', 'password');
+    
+        // Find the user by email to check their status
+        $user = User::where('email', $request->email)->first();
+    
+        // Check if the user exists and if their account is active
+        if ($user && $user->status !== 'active') {
+            return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ hỗ trợ.']);
+        }
+    
+        // Attempt login if the account is active
+        if (Auth::attempt($credentials)) {
+            // Login successful, redirect to the desired page
+            return redirect()->route('home'); // Replace 'home' with the desired route
+        }
+    
+        // Login unsuccessful, display an error message
+        return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác.']);
     }
-
-    // Đăng nhập không thành công, hiển thị thông báo lỗi
-    return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác']);
-    }
+    
 
     public function logout()
     {

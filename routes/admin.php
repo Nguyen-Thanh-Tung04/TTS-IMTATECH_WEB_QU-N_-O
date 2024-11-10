@@ -37,7 +37,7 @@ Route::middleware('isAdmin')->prefix('admin')->as('admin.')->group(function () {
 
     // hóa đơn
     Route::get('/print/{id}/pdf-invoice', [OrderController::class, 'invoice'])->name('print');
-    
+
 
     Route::get('/login', [LoginController::class, 'index'])
         ->name('login');
@@ -45,4 +45,7 @@ Route::middleware('isAdmin')->prefix('admin')->as('admin.')->group(function () {
         ->name('login');
     Route::get('auth/logout', [LoginController::class, 'logout'])
         ->name('logout');
+    Route::put('/accounts/{user}/toggle-status', [AccountController::class, 'toggleStatus'])->name('accounts.toggleStatus');
+    Route::put('/admin/accounts/{user}/toggle-type', [AccountController::class, 'toggleType'])->name('accounts.toggleType');
+
 });
